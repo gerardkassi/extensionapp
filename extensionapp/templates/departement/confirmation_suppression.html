@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container mt-4">
+    <h2>Confirmation de suppression</h2>
+    <p>Êtes-vous sûr de vouloir supprimer l'extension "{{ extension.name }}" associée au département "{{ department.name }}" ?</p>
+    <form method="post">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-danger">Confirmer la suppression</button>
+    </form>
+</div>
+{% endblock %}

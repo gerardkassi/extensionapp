@@ -1,0 +1,212 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+
+
+
+<body class="sb-nav-fixed">
+    <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
+        <a class="navbar-brand ps-3" href="{% url 'extend' %}">IT GESTIONNAIRE</a>
+        <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle" href="#!"><i class="fas fa-bars"></i></button>
+        <form class="d-none d-md-inline-block form-inline ms-auto me-0 me-md-3 my-2 my-md-0" method="GET">
+            <div class="input-group">
+                <input class="form-control" type="text" name="search" placeholder="Recherche..." aria-label="Search for..." aria-describedby="btnNavbarSearch" />
+                <button class="btn btn-primary" id="btnNavbarSearch" type="submit"><i class="fas fa-search"></i></button>
+            </div>
+        </form>
+        <ul class="navbar-nav ms-auto ms-md-0 me-3 me-lg-4">
+            {% if user.is_authenticated %}
+            <span class="user-info">{{ user.username }}</span>
+            {% endif %}            
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    <i class="fas fa-user fa-fw"></i>
+                </a>
+                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+                    <li><a class="dropdown-item" href="{% url 'logout' %}">Logout</a></li>
+                </ul>
+            </li>
+        </ul>
+    </nav>
+
+    <div id="layoutSidenav">
+        <div id="layoutSidenav_nav">
+            <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">
+                <div class="sb-sidenav-menu">
+                    <div class="nav">
+                        <div class="sb-sidenav-menu-heading">Core</div>
+                        <a class="nav-link" href="{% url 'extend' %}">
+                            <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
+                            Tableau de bord
+                        </a>
+                        <div class="sb-sidenav-menu-heading">Interface</div>
+                    </div>
+                </div>
+                <div class="sb-sidenav-footer">
+                    {% if user.is_authenticated %}
+                    <p>Connecté :</p>
+                    <p>{{ user.username }}</p>
+                    <a href="{% url 'admin:index' %}" class="btn btn-primary">
+                        Aller à l'interface d'administration
+                    </a>
+                    {% endif %}
+                </div>
+            </nav>
+        </div>
+
+        <div id="layoutSidenav_content">
+            <main>
+                <div class="container-fluid px-4">
+                    <div class="row justify-content-center">
+                        <div class="col-md-10">
+                            <div class="card mt-4">
+                                <div class="card-header">
+                                    <h4 class="text-center">{{ department.name }}</h4>
+                                </div>
+                                <div class="card-body">
+                                    {% if messages %}
+                                        {% for message in messages %}
+                                            {% if message.tags == "success" %}
+                                                <div id="success-message" class="alert alert-success alert-dismissible fade show" role="alert">
+                                                    {{ message }}
+                                                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                                </div>
+                                            {% elif message.tags == "error" %}
+                                                <div id="error-message" class="alert alert-danger alert-dismissible fade show" role="alert">
+                                                    {{ message }}
+                                                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                                </div>
+                                            {% endif %}
+                                        {% endfor %}
+                                    {% endif %}
+                                    
+                                    <h5 class="card-title text-center">Extensions Non Utilisées</h5>
+                                    <div class="text-center mb-4">
+                                        <a href="{% url 'ajouter_extension_non_utilisee' department.id %}" class="custom-link-success" style="margin-right: 4mm; text-decoration:none">
+                                            <i class="fas fa-plus"></i> Ajouter une extension non utilisée
+                                        </a>
+                                        <a href="{% url 'export_unused_extensions' department_id=department.id %}" class="custom-link-primary" style="margin-right: 4mm; text-decoration:none">
+                                            <i class="fas fa-download"></i> Exporter extension
+                                        </a>
+                                        <a href="{% url 'import_unused_extensions' department_id=department.id %}" class="custom-link-secondary" style="margin-right: 4mm; text-decoration:none">
+                                            <i class="fas fa-file-export"></i> Importer extension
+                                        </a>
+                                    </div>
+
+                                    <nav aria-label="Page navigation" class="d-flex justify-content-center">
+                                        <ul class="pagination">
+                                            {% if page_obj.has_previous %}
+                                            <li class="page-item"><a class="page-link" href="?page=1">Première</a></li>
+                                            <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}">Précédente</a></li>
+                                            {% endif %}
+                                            {% for num in page_obj.paginator.page_range %}
+                                            <li class="page-item{% if page_obj.number == num %} active{% endif %}">
+                                                <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+                                            </li>
+                                            {% endfor %}
+                                            {% if page_obj.has_next %}
+                                            <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}">Suivante</a></li>
+                                            <li class="page-item"><a class="page-link" href="?page={{ page_obj.paginator.num_pages }}">Dernière</a></li>
+                                            {% endif %}
+                                        </ul>
+                                    </nav>
+
+                                    <!-- Formulaire pour la suppression multiple -->
+                                    
+                                    <form id="form-extensions" method="post" action="{% url 'gerer_extensions_non_utilisees' department.id %}">
+                                        {% csrf_token %}
+                                        <div class="table-responsive" style="font-size: smaller;">
+                                            <table class="table table-striped">
+                                                <thead>
+                                                    <tr>
+                                                        <th scope="col"><input type="checkbox" id="select-all"></th>
+                                                        <th scope="col">Extension</th>
+                                                        <th scope="col">Action</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    {% for extension in page_obj %}
+                                                    <tr>
+                                                        <td><input type="checkbox" name="extensions" value="{{ extension.id }}"></td>
+                                                        <td>{{ extension.name }}</td>
+                                                        <td>
+                                                            <a href="{% url 'modifier_extension_non_utilisee' department.id extension.id %}" class="custom-link"><i class="fas fa-edit"></i> Modifier</a>
+                                                            <form action="{% url 'supprimer_extension_non_utilisee' department.id extension.id %}" method="post" style="display: inline; margin-left: 5mm;">
+                                                                {% csrf_token %}
+                                                            </form>
+                                                        </td>
+                                                    </tr>
+                                                    {% endfor %}
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                        <div class="text-center mt-3">
+                                            <button type="submit" class="btn btn-danger" name="action" value="supprimer">Supprimer les extensions sélectionnées</button>
+                                            <button type="submit" class="btn btn-primary" name="action" value="deplacer">Déplacer vers extensions utilisées</button>
+                                        </div>
+                                    </form>
+                                    
+                                    
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+
+            <footer class="py-4 bg-light mt-auto">
+                <div class="container-fluid px-4">
+                    <div class="d-flex align-items-center justify-content-between small">
+                        <div class="text-muted">Copyright &copy; It gestionnaire</div>
+                        <div>
+                            <a href="#">Privacy Policy</a>
+                            &middot;
+                            <a href="#">Terms &amp; Conditions</a>
+                        </div>
+                    </div>
+                </div>
+            </footer>
+        </div>
+    </div>
+
+    <!-- Script pour sélectionner/désélectionner toutes les cases à cocher -->
+    <script>
+        document.getElementById('select-all').onclick = function() {
+            var checkboxes = document.querySelectorAll('input[name="extensions"]');
+            for (var checkbox of checkboxes) {
+                checkbox.checked = this.checked;
+            }
+        }
+
+        // Script pour faire disparaître les messages après un certain temps
+        document.addEventListener('DOMContentLoaded', (event) => {
+            setTimeout(() => {
+                const successMessage = document.getElementById('success-message');
+                const errorMessage = document.getElementById('error-message');
+                
+                if (successMessage) {
+                    successMessage.classList.add('fade-out');
+                }
+                if (errorMessage) {
+                    errorMessage.classList.add('fade-out');
+                }
+            }, 3000); // 3 secondes avant de commencer à disparaître
+            
+            setTimeout(() => {
+                const successMessage = document.getElementById('success-message');
+                const errorMessage = document.getElementById('error-message');
+                
+                if (successMessage) {
+                    successMessage.remove();
+                }
+                if (errorMessage) {
+                    errorMessage.remove();
+                }
+            }, 3500); // 3.5 secondes avant de retirer du DOM
+        });
+    </script>
+
+</body>
+
+{% endblock %}

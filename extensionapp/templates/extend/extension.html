@@ -1,0 +1,142 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+
+    <body class="sb-nav-fixed">
+        <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
+            <a class="navbar-brand ps-3" href="{% url 'extend' %}">IT GESTIONNAIRE</a>
+            <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle" href="#!"><i class="fas fa-bars"></i></button>
+            <form class="d-none d-md-inline-block form-inline ms-auto me-0 me-md-3 my-2 my-md-0">
+                
+            </form>
+            <ul class="navbar-nav ms-auto ms-md-0 me-3 me-lg-4">
+                {% if user.is_authenticated %}
+                <span class="user-info">{{ user.username }}</span>
+                <!-- Autres éléments pour l'utilisateur connecté -->
+                {% endif %} 
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="fas fa-user fa-fw"></i>
+                    </a>
+                
+                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+                        <li><a class="dropdown-item" href="{% url 'logout' %}">Logout</a></li>
+                    </ul>
+                </li>   
+            </ul>
+        </nav>
+        <div id="layoutSidenav">
+            <div id="layoutSidenav_nav">
+                <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">
+                    <div class="sb-sidenav-menu">
+                        <div class="nav">
+                            <div class="sb-sidenav-menu-heading">Core</div>
+                            <a class="nav-link" href="{% url 'extend' %}">
+                                <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
+                                Tableau de bord
+                            </a>
+                            <div class="sb-sidenav-menu-heading">Interface</div>
+                            <div class="collapse" id="collapsePages" aria-labelledby="headingTwo" data-bs-parent="#sidenavAccordion">
+                                <nav class="sb-sidenav-menu-nested nav accordion" id="sidenavAccordionPages"></nav>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="sb-sidenav-footer">
+                        {% if user.is_authenticated %}
+                        <p>Connecté :</p>
+                        <p>{{ user.username }}</p>
+                        <a href="{% url 'admin:index' %}" class="btn btn-primary">
+                            Aller à l'interface d'administration
+                        </a>
+                        
+                        <!-- Autres éléments pour l'utilisateur connecté -->
+                    {% endif %}
+                    </div>
+                </nav>
+            </div>
+            <div id="layoutSidenav_content">
+                <div class="container-fluid px-4">
+                    <h1 class="mt-4">Extension</h1>
+                    <ol class="breadcrumb mb-4">
+                        <li class="breadcrumb-item"><a href="{% url 'extend' %}">Dashboard</a></li>
+                        <li class="breadcrumb-item active">Extension</li>
+                    </ol>
+                    <div class="card mb-4">
+                        <div class="card-body">
+                            <div class="row row-cols-2">
+                                {% for department in departments %}
+                                <div class="col mb-4">
+                                    <div class="card shadow-sm">
+                                        <div class="card-body">
+                                            <h5 class="card-title">{{ department.name }}</h5>
+                                            <div class="btn-group" role="group">
+                                                <a href="{% url 'extensions_utilisees' department.id %}" class="btn btn-primary btn-sm" style="margin-right: 5mm;">Extensions Utilisées <span class="badge badge-light">{{ department.used_extensions.count }}</span></a>
+                                                <a href="{% url 'extensions_non_utilisees' department.id %}" class="btn btn-secondary btn-sm">Extensions Non Utilisées <span class="badge badge-light">{{ department.unused_extensions.count }}</span></a>                                                
+                                            </div>
+                                            
+                                            <canvas id="myChart{{ department.id }}" width="40" height="20"></canvas>
+                                        </div>
+                                    </div>
+                                </div>
+                                <script>
+                                    var used_extensions_count = "{{ department.get_used_extension_count }}";
+                                    var unused_extensions_count = "{{ department.get_unused_extension_count }}";
+                                    used_extensions_count = parseInt(used_extensions_count);
+                                    unused_extensions_count = parseInt(unused_extensions_count);
+                                    var ctx = document.getElementById('myChart{{ department.id }}').getContext('2d');
+                                    var ctx = document.getElementById('myChart{{ department.id }}').getContext('2d');
+                                    var myChart = new Chart(ctx, {
+                                        type: 'bar',
+                                        data: {
+                                            labels: [''],
+                                            datasets: [{
+                                                label: 'Utilisé',
+                                                data: [used_extensions_count],
+                                                backgroundColor: ['blue'],
+                                                borderWidth: 0
+                                            }, {
+                                                label: 'Disponible',
+                                                data: [unused_extensions_count],
+                                                backgroundColor: ['gray'],
+                                                borderWidth: 0
+                                            }]
+                                        },
+                                        options: {
+                                            legend: { display: false },
+                                            scales: {
+                                                xAxes: [{
+                                                    display: true,
+                                                    scaleLabel: { display: true, labelString: 'Statut' }
+                                                }],
+                                                yAxes: [{
+                                                    display: true,
+                                                    ticks: { beginAtZero: true, max: Math.max(used_extensions_count, unused_extensions_count) }
+                                                }]
+                                            },
+                                            barPercentage: 0.3
+                                        }
+                                    });
+                                </script>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <footer class="py-4 bg-light mt-auto">
+            <div class="container-fluid px-4">
+                <div class="d-flex align-items-center justify-content-between small">
+                    <div class="text-muted">Copyright &copy; Your Website 2023</div>
+                    <div>
+                        <a href="#">Privacy Policy</a>
+                        &middot;
+                        <a href="#">Terms &amp; Conditions</a>
+                    </div>
+                </div>
+            </div>
+        </footer>       
+    </body>
+
+{% endblock content %}
