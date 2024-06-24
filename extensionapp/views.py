@@ -16,6 +16,7 @@ from django.shortcuts import render
 
 
 
+
 def home(request):
     if request.user.is_authenticated:
         return redirect('extend')  # Rediriger vers la vue dashboard si l'utilisateur est déjà connecté
@@ -43,6 +44,8 @@ def extension_utilisees(request, department_id):
     if search_query:
         used_extensions = used_extensions.filter(name__icontains=search_query)
 
+    used_extensions = used_extensions.order_by('id')
+    
     paginator = Paginator(used_extensions, 15)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
@@ -57,6 +60,8 @@ def extension_non_utilisees(request, department_id):
     if search_query:
         unused_extensions = unused_extensions.filter(name__icontains=search_query)
 
+    unused_extensions =  unused_extensions.order_by('id')
+   
     paginator = Paginator(unused_extensions, 15)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
@@ -436,6 +441,9 @@ def gerer_extensions_non_utilisees(request, department_id):
         messages.success(request, "extension(s) déplacée(s) vers les extensions utilisées .")
 
     return redirect('extensions_non_utilisees', department_id=department_id)
+
+def handel404(request, exception):
+    return render(request, 'erreur/404.html')
 
 
 

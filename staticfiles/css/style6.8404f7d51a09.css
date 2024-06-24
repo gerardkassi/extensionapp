@@ -1,0 +1,12 @@
+// IMPORT UTILISEE
+
+<style>
+
+    .user-info {
+        color: lightgrey; /* Texte en gris clair */
+        
+        padding: 5px 10px; /* Ajoutez un peu de remplissage pour l'apparence */
+        border-radius: 5px; /* Ajoutez des coins arrondis */
+    }
+
+</style>

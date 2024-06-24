@@ -1,0 +1,37 @@
+// EXTENSION NON UTILISEE
+
+<style>
+    #success-message, #error-message {
+        transition: opacity 0.5s ease-out;
+        opacity: 1;
+    }
+    
+    #success-message.fade-out, #error-message.fade-out {
+        opacity: 0;
+    }
+    
+    .custom-link {
+        color: rgb(15, 14, 14);
+        text-decoration: none;
+        cursor: pointer;
+        font-weight: bold;
+    }
+
+    .user-info {
+        color: lightgrey;
+        padding: 5px 10px;
+        border-radius: 5px;
+    }
+
+    .custom-link-success {
+        color: green;
+    }
+
+    .custom-link-primary {
+        color: blue;
+    }
+
+    .custom-link-secondary {
+        color: red;
+    }
+</style>
