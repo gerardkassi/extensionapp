@@ -18,7 +18,6 @@ from django.contrib import admin
 from django.urls import path, include
 # on importe la fonction 'login' dans le module views de notre application 
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
-from django.conf.urls import handler404
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -27,4 +26,3 @@ urlpatterns = [
 
 urlpatterns += staticfiles_urlpatterns()
 
-handler404="extensionapp.views.handel404"
