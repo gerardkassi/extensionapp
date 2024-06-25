@@ -442,7 +442,8 @@ def gerer_extensions_non_utilisees(request, department_id):
 
     return redirect('extensions_non_utilisees', department_id=department_id)
 
-
+def handel404(request, exception):
+    return render(request, 'erreur/404.html')
 
 
 
