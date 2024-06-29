@@ -198,12 +198,12 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 #        'mail_admins': {
 #            'level': 'ERROR',
 #            #'filters': ['require_debug_false'],
-#            'class': 'django.utils.log.AdminEmailHandler'
+#           'class': 'django.utils.log.AdminEmailHandler'
 #        }
 #    },
 #    'loggers': {
 #        'django': {
-#            'handlers': ['console', 'mail_admins'],
+#           'handlers': ['console', 'mail_admins'],
 #            'level': 'INFO',
 #        },
 #        'django.server': {
@@ -211,6 +211,6 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 #            'level': 'INFO',
 #            'propagate': False,
 #        },
-#    }
+#   }
 #}
 
