@@ -1,200 +1,202 @@
-
 {% extends "base.html" %}
 {% load static %}
 
+{% block content %}
+<body class="sb-nav-fixed">
+    <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
+        <!-- Navbar Brand-->
+        <a class="navbar-brand ps-3" href="{% url 'extend'%}">IT GESTIONNAIRE</a>
+        <!-- Sidebar Toggle-->
+        <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle" href="#!"><i class="fas fa-bars"></i></button>
+        <!-- Navbar Search-->
+        <form class="d-none d-md-inline-block form-inline ms-auto me-0 me-md-3 my-2 my-md-0">
+            <div class="input-group">
+                <input class="form-control" type="text" placeholder="Recherche..." aria-label="Search for..." aria-describedby="btnNavbarSearch" />
+                <button class="btn btn-primary" id="btnNavbarSearch" type="button"><i class="fas fa-search"></i></button>
+            </div>
+        </form>
+        <!-- Navbar-->
 
-{% block content  %}
-
-
-
-    <body class="sb-nav-fixed">
-        <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
-            <!-- Navbar Brand-->
-            <a class="navbar-brand ps-3" href="{% url 'extend'%}">IT GESTIONNAIRE</a>
-            <!-- Sidebar Toggle-->
-            <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle" href="#!"><i class="fas fa-bars"></i></button>
-            <!-- Navbar Search-->
-            <form class="d-none d-md-inline-block form-inline ms-auto me-0 me-md-3 my-2 my-md-0">
-                <div class="input-group">
-                    <input class="form-control" type="text" placeholder="Recherche..." aria-label="Search for..." aria-describedby="btnNavbarSearch" />
-                    <button class="btn btn-primary" id="btnNavbarSearch" type="button"><i class="fas fa-search"></i></button>
-                </div>
-            </form>
-            <!-- Navbar-->
-
-            <ul class="navbar-nav ms-auto ms-md-0 me-3 me-lg-4">
-                {% if user.is_authenticated %}
-                <span class="user-info">{{ user.username }}</span>
-                <!-- Autres éléments pour l'utilisateur connecté -->
-                {% endif %}  
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                        <i class="fas fa-user fa-fw"></i>
-                    </a>
-                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                       
-                        <li><a class="dropdown-item" href="{% url 'logout' %}">Logout</a></li>
-                    </ul>
-                </li>
-            </ul>
-            
-        </nav>
-        <div id="layoutSidenav">
-            <div id="layoutSidenav_nav">
-                <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">
-                    <div class="sb-sidenav-menu">
-                        <div class="nav">
-                            <div class="sb-sidenav-menu-heading">Core</div>
-                            <a class="nav-link" href="{% url 'extend'%}">
-                                <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
-                                Tableau de bord
-                            </a>
-                            <div class="sb-sidenav-menu-heading">Interface</div>
-                            
-                            <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapsePages" aria-expanded="false" aria-controls="collapsePages">
-                                <div class="sb-nav-link-icon"><i class="fas fa-tasks"></i></div>
-                                APPLICATION
-                                <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
-                            </a>
-                            <div class="collapse" id="collapsePages" aria-labelledby="headingTwo" data-bs-parent="#sidenavAccordion">
-                                <nav class="sb-sidenav-menu-nested nav accordion" id="sidenavAccordionPages">
-                                    
-                                    <a class="nav-link collapsed" href="" data-bs-toggle="collapse" data-bs-target="#pagesCollapseError" aria-expanded="false" aria-controls="pagesCollapseError">
-                                        listes des applications
-                                        <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
-                                    </a>
-                                    <div class="collapse" id="pagesCollapseError" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordionPages">
-                                        <nav class="sb-sidenav-menu-nested nav">
-                                            
-                                            <a class="nav-link" href="{% url 'extend' %}">Extension</a>
-                                        
-                                        </nav>
-                                    </div>
-                                </nav>
-                            </div>
-                            
-                            
+        <ul class="navbar-nav ms-auto ms-md-0 me-3 me-lg-4">
+            {% if user.is_authenticated %}
+            <span class="user-info">{{ user.username }}</span>
+            <!-- Autres éléments pour l'utilisateur connecté -->
+            {% endif %}  
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    <i class="fas fa-user fa-fw"></i>
+                </a>
+                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+                    <li><a class="dropdown-item" href="{% url 'logout' %}">Logout</a></li>
+                </ul>
+            </li>
+        </ul>
+        
+    </nav>
+    <div id="layoutSidenav">
+        <div id="layoutSidenav_nav">
+            <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">
+                <div class="sb-sidenav-menu">
+                    <div class="nav">
+                        <div class="sb-sidenav-menu-heading">Core</div>
+                        <a class="nav-link" href="{% url 'extend'%}">
+                            <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
+                            Tableau de bord
+                        </a>
+                        <div class="sb-sidenav-menu-heading">Interface</div>
+                        
+                        <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapsePages" aria-expanded="false" aria-controls="collapsePages">
+                            <div class="sb-nav-link-icon"><i class="fas fa-tasks"></i></div>
+                            APPLICATION
+                            <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
+                        </a>
+                        <div class="collapse" id="collapsePages" aria-labelledby="headingTwo" data-bs-parent="#sidenavAccordion">
+                            <nav class="sb-sidenav-menu-nested nav accordion" id="sidenavAccordionPages">
+                                
+                                <a class="nav-link collapsed" href="" data-bs-toggle="collapse" data-bs-target="#pagesCollapseError" aria-expanded="false" aria-controls="pagesCollapseError">
+                                    listes des applications
+                                    <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
+                                </a>
+                                <div class="collapse" id="pagesCollapseError" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordionPages">
+                                    <nav class="sb-sidenav-menu-nested nav">
+                                        <a class="nav-link" href="{% url 'extend' %}">Extension</a>
+                                    </nav>
+                                </div>
+                            </nav>
                         </div>
                     </div>
-                    <div class="sb-sidenav-footer">
-                        {% if user.is_authenticated %}
-                        <p>Connecté :</p>
-                        <p>{{ user.username }}</p>
-                        <a href="{% url 'admin:index' %}" class="btn btn-primary">
-                            Aller à l'interface d'administration
-                        </a>
-                        
-                        <!-- Autres éléments pour l'utilisateur connecté -->
+                </div>
+                <div class="sb-sidenav-footer">
+                    {% if user.is_authenticated %}
+                    <p>Connecté :</p>
+                    <p>{{ user.username }}</p>
+                    <a href="{% url 'admin:index' %}" class="btn btn-primary">
+                        Aller à l'interface d'administration
+                    </a>
+                    <!-- Autres éléments pour l'utilisateur connecté -->
                     {% endif %}
-                    </div>
-                </nav>
-            </div>
-            <div id="layoutSidenav_content">
-                <main>
-                    <div class="container-fluid px-4 mt-5">
-                        <div class="row justify-content-center">
-                            <div class="col-md-8">
-                                <div class="card">
-                                    <div class="card-header">
-                                        <h5 class="mt-4">Extension Utilisée - {{ department.name }}</h5>
-                                        <ol class="breadcrumb mb-4">
-                                            <li class="breadcrumb-item active">Modifer une Extension Utilisée</li>
-                                        </ol>
-                                    </div>
-                                    <div class="card-body">
+                </div>
+            </nav>
+        </div>
+        <div id="layoutSidenav_content">
+            <main>
+                <div class="container-fluid px-4 mt-5">
+                    <div class="row justify-content-center">
+                        <div class="col-md-8">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5 class="mt-4">Extension Utilisée - {{ department.name }}</h5>
+                                    <ol class="breadcrumb mb-4">
+                                        <li class="breadcrumb-item active">Modifier une Extension Utilisée</li>
+                                    </ol>
+                                </div>
+                                <div class="card-body">
 
-                                        {% if messages %}
-                                        {% for message in messages %}
-                                            {% if message.tags == "success" %}
-                                                <div id="success-message" class="alert alert-success alert-dismissible fade show" role="alert">
-                                                    {{ message }}
-                                                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                                                </div>
-                                            {% elif message.tags == "error" %}
-                                                <div id="error-message" class="alert alert-danger alert-dismissible fade show" role="alert">
-                                                    {{ message }}
-                                                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                                                </div>
-                                            {% endif %}
-                                        {% endfor %}
+                                    {% if messages %}
+                                    {% for message in messages %}
+                                        {% if message.tags == "success" %}
+                                            <div id="success-message" class="alert alert-success alert-dismissible fade show" role="alert">
+                                                {{ message }}
+                                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                            </div>
+                                        {% elif message.tags == "error" %}
+                                            <div id="error-message" class="alert alert-danger alert-dismissible fade show" role="alert">
+                                                {{ message }}
+                                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                            </div>
+                                        {% endif %}
+                                    {% endfor %}
                                     {% endif %}
 
-                                        <div class="container mt-4">
-                                            <h4>Modifier une Extension Utilisée</h4>
-                                            <form method="post">
-                                                {% csrf_token %}
-                                                <div class="mb-3">
-                                                    <label for="extension_name" class="form-label">Nom de l'extension :</label>
+                                    <div class="container mt-4">
+                                        <h4>Modifier une Extension Utilisée</h4>
+                                        <form method="post">
+                                            {% csrf_token %}
+                                            <div class="mb-3 row">
+                                                <label for="extension_name" class="col-sm-3 col-form-label">Extension :</label>
+                                                <div class="col-sm-9">
                                                     {{ form.name }}
                                                 </div>
-                                                <!-- Ajoutez d'autres champs de formulaire au besoin -->
-                                                <button type="submit" class="btn btn-primary">Ajouter</button>
-                                            </form>
-                                        </div>
+                                            </div>
+                                            <div class="mb-3 row">
+                                                <label for="extension_hostname" class="col-sm-3 col-form-label">Hostname :</label>
+                                                <div class="col-sm-9">
+                                                    {{ form.hostname }}
+                                                </div>
+                                            </div>
+                                            <div class="mb-3 row">
+                                                <label for="extension_floor" class="col-sm-3 col-form-label">Floor :</label>
+                                                <div class="col-sm-9">
+                                                    {{ form.floor }}
+                                                </div>
+                                            </div>
+                                            <div class="mb-3 row">
+                                                <label for="extension_position" class="col-sm-3 col-form-label">Position sur pic :</label>
+                                                <div class="col-sm-9">
+                                                    {{ form.position }}
+                                                </div>
+                                            </div>
+                                            <div class="mb-3 row">
+                                                <div class="offset-sm-3 col-sm-9">
+                                                    <button type="submit" class="btn btn-primary">Modifier</button>
+                                                </div>
+                                            </div>
+                                        </form>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-
-                </main>
-                <footer class="py-4 bg-light mt-auto">
-                    <div class="container-fluid px-4">
-                        <div class="d-flex align-items-center justify-content-between small">
-                            <div class="text-muted">Copyright &copy; It gestionnaire</div>
-                            <div>
-                                <a href="#">Privacy Policy</a>
-                                &middot;
-                                <a href="#">Terms &amp; Conditions</a>
-                            </div>
+                </div>
+            </main>
+            <footer class="py-4 bg-light mt-auto">
+                <div class="container-fluid px-4">
+                    <div class="d-flex align-items-center justify-content-between small">
+                        <div class="text-muted">Copyright &copy; It gestionnaire</div>
+                        <div>
+                            <a href="#">Privacy Policy</a>
+                            &middot;
+                            <a href="#">Terms &amp; Conditions</a>
                         </div>
                     </div>
-                </footer>
-            </div>
-        </div> 
+                </div>
+            </footer>
+        </div>
+    </div>
 
-        <script>
-            document.getElementById('select-all').onclick = function() {
-                var checkboxes = document.querySelectorAll('input[name="extensions"]');
-                for (var checkbox of checkboxes) {
-                    checkbox.checked = this.checked;
-                }
+    <script>
+        document.getElementById('select-all').onclick = function() {
+            var checkboxes = document.querySelectorAll('input[name="extensions"]');
+            for (var checkbox of checkboxes) {
+                checkbox.checked = this.checked;
             }
-    
-            // Fermer le message de succès lorsque la croix est cliquée
+        }
+
+        document.addEventListener('DOMContentLoaded', (event) => {
+            setTimeout(() => {
+                const successMessage = document.getElementById('success-message');
+                const errorMessage = document.getElementById('error-message');
+                
+                if (successMessage) {
+                    successMessage.classList.add('fade-out');
+                }
+                if (errorMessage) {
+                    errorMessage.classList.add('fade-out');
+                }
+            }, 3000); // 3 secondes avant de commencer à disparaître
             
-        
-                document.addEventListener('DOMContentLoaded', (event) => {
-                    setTimeout(() => {
-                        const successMessage = document.getElementById('success-message');
-                        const errorMessage = document.getElementById('error-message');
-                        
-                        if (successMessage) {
-                            successMessage.classList.add('fade-out');
-                        }
-                        if (errorMessage) {
-                            errorMessage.classList.add('fade-out');
-                        }
-                    }, 3000); // 3 secondes avant de commencer à disparaître
-                    
-                    setTimeout(() => {
-                        const successMessage = document.getElementById('success-message');
-                        const errorMessage = document.getElementById('error-message');
-                        
-                        if (successMessage) {
-                            successMessage.remove();
-                        }
-                        if (errorMessage) {
-                            errorMessage.remove();
-                        }
-                    }, 3500); // 3.5 secondes avant de retirer du DOM
-                });
-            </script>
-        
-    </body>
-{% endblock content  %}
-
-
-
-
-
+            setTimeout(() => {
+                const successMessage = document.getElementById('success-message');
+                const errorMessage = document.getElementById('error-message');
+                
+                if (successMessage) {
+                    successMessage.remove();
+                }
+                if (errorMessage) {
+                    errorMessage.remove();
+                }
+            }, 3500); // 3.5 secondes avant de retirer du DOM
+        });
+    </script>
+</body>
+{% endblock content %}

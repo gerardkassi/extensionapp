@@ -90,12 +90,12 @@ WSGI_APPLICATION = 'gestionnaireit.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
-#DATABASES = {
-#    'default': {
-#        'ENGINE': 'django.db.backends.sqlite3',
-#        'NAME': BASE_DIR / 'db.sqlite3',
-#    }
-#}
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
+    }
+}
 
 #DATABASES = {
 #    'default': dj_database_url.parse(config('DATABSE_URL'))
@@ -168,7 +168,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 #LOGGING = {
 #    'version': 1,
 #    'disable_existing_loggers': True,
-    # 'disable_existing_loggers': False,
+#     'disable_existing_loggers': False,
 #    'filters': {
 #        'require_debug_false': {
 #            '()': 'django.utils.log.RequireDebugFalse',

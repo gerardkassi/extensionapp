@@ -5,7 +5,6 @@
 
 <!-- Début du contenu spécifique à cette page -->
 
-
 <body class="sb-nav-fixed">
     <!-- Barre de navigation supérieure -->
     <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
@@ -107,10 +106,10 @@
                                             <i class="fas fa-plus"></i> Ajouter une extension utilisée
                                         </a>
                                         <a href="{% url 'export_used_extensions' department_id=department.id %}" class="custom-link-primary"style="margin-right: 4mm; text-decoration:none">
-                                            <i class="fas fa-download"></i> Exporter extension
+                                            <i class="fas fa-download"></i> Exporter extension utilisée
                                         </a>
                                         <a href="{% url 'import_used_extensions' department_id=department.id %}" class="custom-link-secondary" style="margin-right: 4mm; text-decoration:none">
-                                            <i class="fas fa-file-export"></i> Importer extension
+                                            <i class="fas fa-file-export"></i> Importer extension utilisée
                                         </a>
                                     </div>
 
@@ -140,6 +139,9 @@
                                                     <tr>
                                                         <th scope="col"><input type="checkbox" id="select-all"></th>
                                                         <th scope="col">Extension</th>
+                                                        <th scope="col">Hostname</th>
+                                                        <th scope="col">Floor</th>
+                                                        <th scope="col">Position sur pic</th>
                                                         <th scope="col">Action</th>
                                                     </tr>
                                                 </thead>
@@ -148,6 +150,9 @@
                                                     <tr>
                                                         <td><input type="checkbox" name="extensions" value="{{ extension.id }}"></td>
                                                         <td>{{ extension.name }}</td>
+                                                        <td>{{ extension.hostname }}</td>
+                                                        <td>{{ extension.floor }}</td>
+                                                        <td>{{ extension.position }}</td>
                                                         <td>
                                                             <a href="{% url 'modifier_extension_utilisee' department.id extension.id %}" class="custom-link"><i class="fas fa-edit"></i> Modifier</a>
                                                         </td>
@@ -161,7 +166,6 @@
                                             <button type="submit" class="btn btn-primary" name="action" value="deplacer">Déplacer vers extensions non utilisées</button>
                                         </div>
                                     </form>
-                                    
                                     
                                 </div>
                             </div>

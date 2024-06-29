@@ -1,0 +1,127 @@
+{% extends "admin/base.html" %}
+{% load static %}
+
+{% block extrahead %}
+    {{ block.super }}
+    <style>
+        /* Styles CSS personnalisés pour l'interface d'administration */
+
+        /* Conteneur principal centré */
+        .admin-container {
+            max-width: 800px; /* Largeur maximale du contenu */
+            margin: 0 auto; /* Centre le contenu */
+            padding: 20px; /* Espacement intérieur */
+        }
+
+        /* En-tête du site */
+        #site-name {
+            font-size: 24px;
+            margin-bottom: 10px;
+            font-family: 'Arial', sans-serif;
+        }
+
+        #content-related {
+            display: none;
+        }
+
+        #site-name a {
+            font-weight: bold;
+            color: #336699;
+            text-decoration: none;
+        }
+
+        /* Message de bienvenue */
+        .custom-welcome {
+            font-weight: bold;
+            color: #990000;
+            font-size: 10px;
+            margin-right: 20px;
+        }
+
+        /* Liens du menu utilisateur */
+        #user-tools a {
+            font-weight: bold;
+            color: #336699;
+            text-decoration: none;
+            margin-right: 15px;
+            font-size: 16px;
+        }
+
+        /* Conteneur du menu utilisateur */
+        #user-tools {
+            margin-top: 15px;
+            font-size: 16px;
+        }
+
+        /* Titres de sections */
+        .section-title {
+            font-size: 24px;
+            margin-bottom: 10px;
+            font-weight: bold;
+            color: #333333;
+        }
+
+        /* Liens d'action (Ajouter, Modifier, etc.) */
+        .action-link {
+            font-weight: bold;
+            font-size: 18px;
+            color: #336699;
+            text-decoration: none;
+            margin-right: 10px;
+        }
+    </style>
+{% endblock %}
+
+{% block branding %}
+    <div class="admin-container">
+        <h1 id="site-name">
+            <a href="{% url 'admin:index' %}">
+                {{ site_header|default:_('Gestionnaire IT Administration') }}
+            </a>
+        </h1>
+    </div>
+{% endblock %}
+
+{% block user-tools %}
+    <div class="admin-container">
+        <div id="user-tools">
+            {% if user.is_authenticated %}
+                <span class="custom-welcome">
+                    Bienvenue, {{ user.username }}.
+                </span>
+                <a href="{% url 'admin:password_change' %}" class="action-link">
+                    {{ _('Changer le mot de passe') }}
+                </a> /
+                <a href="{% url 'admin:logout' %}" class="action-link">
+                    {{ _('Déconnexion') }}
+                </a>
+            {% else %}
+                <a href="{% url 'admin:login' %}" class="action-link">
+                    {{ _('Connexion') }}
+                </a>
+            {% endif %}
+            <a href="{% url 'index' %}" class="action-link">
+                {{ _('Voir le site') }}
+            </a>
+        </div>
+    </div>
+{% endblock %}
+
+{% block content %}
+    <div class="admin-container">
+        <div class="section-title">Authentification et autorisation Groupes</div>
+        <!-- Contenu pour Authentification et autorisation Groupes -->
+
+        <div class="section-title">Utilisateurs</div>
+        <!-- Contenu pour Utilisateurs -->
+
+        <div class="section-title">Extensionapp Departments</div>
+        <!-- Contenu pour Extensionapp Departments -->
+
+        <div class="section-title">Unused extensions</div>
+        <!-- Contenu pour Unused extensions -->
+
+        <div class="section-title">Used extensions</div>
+        <!-- Contenu pour Used extensions -->
+    </div>
+{% endblock %}

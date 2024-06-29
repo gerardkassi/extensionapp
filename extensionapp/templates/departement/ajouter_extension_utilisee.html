@@ -136,13 +136,36 @@
                                     <div class="container mt-4">
                                         <h5>Ajouter une Extension Utilisée</h5>
                                         <form method="post">
-                                            {% csrf_token %} <!-- Protection CSRF -->
-                                            <div class="mb-3">
-                                                <label for="extension_name" class="form-label">Nom de l'extension :</label>
-                                                {{ form.name }} <!-- Champ de formulaire pour le nom de l'extension -->
+                                            {% csrf_token %}
+                                            <div class="form-group row mb-4">
+                                                <label class="col-sm-3 col-form-label">Extension :</label>
+                                                <div class="col-sm-9">
+                                                    {{ form.name }}
+                                                </div>
                                             </div>
-                                            <!-- Ajoutez d'autres champs de formulaire au besoin -->
-                                            <button type="submit" class="btn btn-primary">Ajouter</button> <!-- Bouton de soumission du formulaire -->
+                                            <div class="form-group row mb-4">
+                                                <label class="col-sm-3 col-form-label">{{ form.hostname.label }}</label>
+                                                <div class="col-sm-9">
+                                                    {{ form.hostname }}
+                                                </div>
+                                            </div>
+                                            <div class="form-group row mb-4">
+                                                <label class="col-sm-3 col-form-label">{{ form.floor.label }}</label>
+                                                <div class="col-sm-9">
+                                                    {{ form.floor }}
+                                                </div>
+                                            </div>
+                                            <div class="form-group row mb-4">
+                                                <label class="col-sm-3 col-form-label">Position sur pic </label>
+                                                <div class="col-sm-9">
+                                                    {{ form.position }}
+                                                </div>
+                                            </div>
+                                            <div class="form-group row mb-4">
+                                                <div class="offset-sm-3 col-sm-9">
+                                                    <button type="submit" class="btn btn-primary">Enregistrer</button>
+                                                </div>
+                                            </div>
                                         </form>
                                     </div>
                                 </div>
