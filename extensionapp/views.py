@@ -78,25 +78,32 @@ def ajouter_extension_non_utilisee(request, department_id):
     department = get_object_or_404(Department, pk=department_id)
     
     if request.method == 'POST':
-        form = AjouterExtensionNonUtiliseeForm(request.POST)  # Utilisez le bon formulaire ici
+        form = AjouterExtensionNonUtiliseeForm(request.POST)
         if form.is_valid():
             extension_non_utilisee = form.save(commit=False)
             extension_non_utilisee.department = department
             
-            # Vérifier si l'extension existe déjà pour ce département
+            # Vérifier si l'extension existe déjà parmi les extensions non utilisées pour ce département
             existing_extension = UnusedExtension.objects.filter(name=extension_non_utilisee.name, department=department).exists()
             
             if existing_extension:
-                # Générer un message d'erreur pour les extensions non utilisées
                 messages.error(request, "Cette extension existe déjà dans les extensions non utilisées pour ce projet.")
             else:
-                extension_non_utilisee.save()
-                messages.success(request, "L'extension non utilisée a été ajoutée.")
-                return redirect('extensions_non_utilisees', department_id=department_id)
+                # Vérifier si l'extension existe déjà parmi les extensions utilisées pour ce département
+                existing_used_extension = UsedExtension.objects.filter(name=extension_non_utilisee.name, department=department).exists()
+                
+                if existing_used_extension:
+                    messages.error(request, "Cette extension existe déjà parmi les extensions utilisées pour ce département.")
+                else:
+                    extension_non_utilisee.save()
+                    messages.success(request, "L'extension non utilisée a été ajoutée avec succès.")
+                    return redirect('extensions_non_utilisees', department_id=department_id)
+    
     else:
-        form = AjouterExtensionNonUtiliseeForm()  # Utilisez le bon formulaire ici
+        form = AjouterExtensionNonUtiliseeForm()
     
     return render(request, 'departement/ajouter_extension_non_utilisee.html', {'form': form, 'department': department})
+
 
        
 def ajouter_extension_utilisee(request, department_id):
@@ -108,29 +115,36 @@ def ajouter_extension_utilisee(request, department_id):
             extension_utilisee = form.save(commit=False)
             extension_utilisee.department = department
             
-            # Vérifier si l'extension existe déjà pour ce département
+            # Vérifier si l'extension existe déjà parmi les extensions utilisées pour ce département
             existing_extension = UsedExtension.objects.filter(name=extension_utilisee.name, department=department).exists()
             
             if existing_extension:
                 messages.error(request, "Cette extension existe déjà dans les extensions utilisées pour ce département.")
             else:
-                # Vérifier si le hostname existe déjà pour ce département
-                existing_hostname = UsedExtension.objects.filter(hostname=extension_utilisee.hostname, department=department).exists()
+                # Vérifier si l'extension existe déjà parmi les extensions non utilisées pour ce département
+                existing_unused_extension = UnusedExtension.objects.filter(name=extension_utilisee.name, department=department).exists()
                 
-                if existing_hostname:
-                    messages.error(request, "Ce hostname est déjà utilisé pour une autre extension dans ce département.")
+                if existing_unused_extension:
+                    messages.error(request, "Cette extension existe déjà parmi les extensions non utilisées pour ce département.")
                 else:
-                    try:
-                        extension_utilisee.save()
-                        messages.success(request, "L'extension utilisée a été ajoutée avec succès.")
-                        return redirect('extensions_utilisees', department_id=department_id)
-                    except IntegrityError:
-                        messages.error(request, "Une erreur d'intégrité est survenue lors de l'enregistrement de l'extension.")
+                    # Vérifier si le hostname existe déjà pour ce département
+                    existing_hostname = UsedExtension.objects.filter(hostname=extension_utilisee.hostname, department=department).exists()
+                    
+                    if existing_hostname:
+                        messages.error(request, "Ce hostname est déjà utilisé pour une autre extension dans ce département.")
+                    else:
+                        try:
+                            extension_utilisee.save()
+                            messages.success(request, "L'extension utilisée a été ajoutée avec succès.")
+                            return redirect('extensions_utilisees', department_id=department_id)
+                        except IntegrityError:
+                            messages.error(request, "Une erreur d'intégrité est survenue lors de l'enregistrement de l'extension.")
     
     else:
         form = AjouterExtensionUtiliseeForm()
     
     return render(request, 'departement/ajouter_extension_utilisee.html', {'form': form, 'department': department})
+
 
 
 def modifier_extension_non_utilisee(request, department_id, extension_id):
@@ -352,7 +366,7 @@ def import_used_extensions(request, department_id):
                     floor = row.get('Floor')
                     position = row.get('Position')
 
-                    existing_extension = UsedExtension.objects.filter(name=extension_name, department_id=department_id).first()
+                    existing_extension = UsedExtension.objects.filter(name=extension_name, department=department).first()
                     if existing_extension:
                         # L'extension existe déjà, mettre à jour les champs si nécessaire
                         existing_extension.hostname = hostname
@@ -363,7 +377,7 @@ def import_used_extensions(request, department_id):
                         # Créer une nouvelle extension utilisée avec les champs
                         UsedExtension.objects.create(
                             name=extension_name,
-                            department_id=department_id,
+                            department=department,
                             hostname=hostname,
                             floor=floor,
                             position=position
@@ -384,6 +398,7 @@ def import_used_extensions(request, department_id):
 
     return render(request, 'departement/import_used_extensions.html', {'form': form, 'department': department})
 
+
 def import_unused_extensions(request, department_id):
     department = get_object_or_404(Department, pk=department_id)
 
@@ -402,14 +417,18 @@ def import_unused_extensions(request, department_id):
                     if not extension_name:
                         continue
 
+                    # Vérifiez si l'extension existe déjà parmi les extensions utilisées
+                    if UsedExtension.objects.filter(name=extension_name, department=department).exists():
+                        messages.error(request, f"L'extension {extension_name} existe déjà parmi les extensions utilisées.")
+                        continue
+
                     try:
                         UnusedExtension.objects.create(name=extension_name, department=department)
                     except IntegrityError:
                         # Si le nom de l'extension existe déjà, récupérer l'objet existant
                         existing_extension = UnusedExtension.objects.get(name=extension_name, department=department)
                         # Optionnel: Vous pouvez mettre à jour d'autres champs si nécessaire
-                        # existing_extension.some_field = some_value
-                        # existing_extension.save()
+                        existing_extension.save()
                 messages.success(request, 'Les extensions non utilisées ont été importées avec succès.')
                 return redirect('extensions_non_utilisees', department_id=department_id)
             except pd.errors.EmptyDataError:
@@ -422,6 +441,7 @@ def import_unused_extensions(request, department_id):
         form = ExtensionImportForm()
 
     return render(request, 'departement/import_unused_extensions.html', {'form': form, 'department': department})
+
 
 def gerer_extensions_utilisees(request, department_id):
     department = get_object_or_404(Department, pk=department_id)
@@ -438,11 +458,20 @@ def gerer_extensions_utilisees(request, department_id):
     elif action == 'deplacer':
         for extension_id in extension_ids:
             used_extension = get_object_or_404(UsedExtension, pk=extension_id, department=department)
+            
+            # Vérifier si l'extension existe déjà dans les extensions non utilisées
+            existing_unused_extension = UnusedExtension.objects.filter(name=used_extension.name, department=department).first()
+            if existing_unused_extension:
+                existing_unused_extension.delete()  # Supprimer l'extension existante
+
+            # Créer une nouvelle extension non utilisée
             UnusedExtension.objects.create(name=used_extension.name, department=department)
+            
             used_extension.delete()
         messages.success(request, "Extensions déplacées vers les extensions non utilisées.")
 
     return redirect('extensions_utilisees', department_id=department_id)
+
 
 def gerer_extensions_non_utilisees(request, department_id):
     department = get_object_or_404(Department, pk=department_id)
@@ -455,13 +484,21 @@ def gerer_extensions_non_utilisees(request, department_id):
 
     if action == 'supprimer':
         UnusedExtension.objects.filter(department_id=department_id, id__in=extension_ids).delete()
-        messages.success(request, " extension(s)  supprimée(s).")
+        messages.success(request, "extension(s) supprimée(s).")
     elif action == 'deplacer':
         for extension_id in extension_ids:
             unused_extension = get_object_or_404(UnusedExtension, pk=extension_id, department=department)
+            
+            # Vérifier si l'extension existe déjà dans les extensions utilisées
+            existing_used_extension = UsedExtension.objects.filter(name=unused_extension.name, department=department).first()
+            if existing_used_extension:
+                existing_used_extension.delete()  # Supprimer l'extension existante
+
+            # Créer une nouvelle extension utilisée
             UsedExtension.objects.create(name=unused_extension.name, department=department)
+            
             unused_extension.delete()
-        messages.success(request, "extension(s) déplacée(s) vers les extensions utilisées .")
+        messages.success(request, "extension(s) déplacée(s) vers les extensions utilisées.")
 
     return redirect('extensions_non_utilisees', department_id=department_id)
 
