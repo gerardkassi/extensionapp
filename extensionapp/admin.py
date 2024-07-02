@@ -6,7 +6,7 @@ from django.utils.translation import gettext_lazy as _
 from django.utils.html import format_html
 
 
-admin.site.site_header = "Gestionnaire IT Administration"
+admin.site.site_header = " IT Administration"
 admin.site.site_title = "IT Gestionnaire"
 admin.site.index_title = "Bienvenue sur l'interface d'administration"
 
